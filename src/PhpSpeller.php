@@ -18,13 +18,19 @@ class PhpSpeller
     /**
      * @return array
      */
-    public function getBackends()
+    public function getInfo()
     {
         $enchantResource = enchant_broker_init();
         $providers = enchant_broker_describe($enchantResource);
+
+        $dictionaries = enchant_broker_list_dicts($enchantResource);
+
         enchant_broker_free($enchantResource);
 
-        return $providers;
+        return array(
+            'providers' => $providers,
+            'dictionaries' => $dictionaries,
+        );
     }
 
     /**

@@ -42,7 +42,7 @@ class InfoCommand extends Command
     {
         $this
             ->setName('info')
-        ;
+            ->setDescription('Information about available backends and dictionaries.');
     }
 
     /**
@@ -50,13 +50,22 @@ class InfoCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $backends = $this->speller->getBackends();
+        $info = $this->speller->getInfo();
 
         $output->writeln('Available Enchant backends:');
         $table = new Table($output);
         $table->setHeaders(array('Provider', 'Description'));
-        foreach ($backends as $backend) {
+        foreach ($info['providers'] as $backend) {
             $table->addRow(array($backend['name'], $backend['desc']));
+        }
+
+        $table->render();
+
+        $output->writeln('Available Enchant dictionaries:');
+        $table = new Table($output);
+        $table->setHeaders(array('Lang', 'Provider', 'Description'));
+        foreach ($info['dictionaries'] as $dictionary) {
+            $table->addRow(array($dictionary['lang_tag'], $dictionary['provider_name'], $dictionary['provider_desc']));
         }
 
         $table->render();
